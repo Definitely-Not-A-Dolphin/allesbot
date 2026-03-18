@@ -4,7 +4,7 @@ import { ActivityType, type Client, Events } from "discord.js";
 export const readyEvent = new BotEvent<Events.ClientReady>({
   type: Events.ClientReady,
   once: true,
-  execute: (client: Client<true>) => {
+  execute(client: Client<true>): void {
     console.log(`Ready! Logged in as ${client.user.tag}`);
     client.user.setActivity("We almost up", {
       type: ActivityType.Custom,

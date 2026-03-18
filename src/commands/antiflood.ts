@@ -1,6 +1,5 @@
 import { client } from "$src/client.ts";
 import { Command } from "$src/types.ts";
-import type { Message } from "discord.js";
 
 export type BucketContent = {
   lastTS: number;
@@ -16,9 +15,9 @@ export const antiflood = new Command({
   command: /.+/,
   description: "niet spammen",
   showInHelp: false,
-  match: (message: Message) =>
-    !(message.author.id === client.user.id || message.author.bot),
-  execute: async (message: Message) => {
+  match: (message) =>
+    message.author.id !== client.user.id && !message.author.bot,
+  async execute(message): Promise<void> {
     const now = new Date().valueOf();
     let bucket = buckets[message.author.id];
 
@@ -39,9 +38,9 @@ export const antiflood = new Command({
 
     // time out user
     if (bucket.count > maxBucketSize) {
-      const member = message.mentions.members?.first()
-        ? message.mentions.members.first()
-        : message.guild?.members.cache.get(message.author.id);
+      const member =
+        message.mentions.members.first() ||
+        message.guild?.members.cache.get(message.author.id);
 
       if (!member) {
         console.log(
@@ -51,6 +50,7 @@ export const antiflood = new Command({
         );
         return;
       }
+
       await member
         .timeout(60 * 1000, "rustig aan aap mannetje")
         .catch((err) => {

@@ -1,16 +1,15 @@
 import env from "$src/env.ts";
 import { Command } from "$src/types.ts";
-import type { Message } from "discord.js";
 
 export const yearprogress = new Command({
   name: "year progress",
   command: "yp",
   description: "hoe ver is het jaar",
   showInHelp: true,
-  match(message: Message): boolean {
-    return message.content === env.PREFIX + yearprogress.command;
+  match(message): boolean {
+    return message.content === env.PREFIX + this.command;
   },
-  execute: async (message: Message) => {
+  async execute(message): Promise<void> {
     const millisPerDay = 86400000;
     const date = new Date();
     const start = Date.UTC(date.getFullYear(), 0, 0);

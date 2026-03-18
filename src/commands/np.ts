@@ -1,7 +1,7 @@
-import { db } from "$src/db.ts";
+import db from "$src/db.ts";
 import env from "$src/env.ts";
 import { Command } from "$src/types.ts";
-import { EmbedBuilder, type Message } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
 interface Track {
   name: string;
@@ -55,10 +55,10 @@ export const np = new Command({
   command: "np",
   description: "Shows your or someone else's currently playing track",
   showInHelp: true,
-  match(message: Message): boolean {
-    return message.content.split(" ")[0] === env.PREFIX + np.command;
+  match(message): boolean {
+    return message.content.split(" ")[0] === env.PREFIX + this.command;
   },
-  execute: async (message: Message) => {
+  async execute(message): Promise<void> {
     let lastFMUsername = message.content.split(" ").slice(1).join();
 
     // Check of er een arg is
@@ -90,7 +90,7 @@ export const np = new Command({
     const lastFMData: LastFMData = await response.json();
     const recentlyPlayed: LastFMTrack[] = lastFMData.recenttracks.track;
 
-    if (!recentlyPlayed?.[0]?.["@attr"]?.nowplaying) {
+    if (!recentlyPlayed[0]["@attr"]?.nowplaying) {
       await message.reply("dan moet je wel muziek aan zetten jij zukkel");
       return;
     }
@@ -122,14 +122,15 @@ export const np = new Command({
   },
 });
 
-export const setNPUser: Command = {
+export const setNPUser = new Command({
   name: "setnpuser",
   command: "setnpuser",
   description: "Sets the Last.fm username",
   showInHelp: true,
-  match: (message: Message) =>
-    message.content.split(" ")[0] === env.PREFIX + setNPUser.command,
-  execute: async (message: Message) => {
+  match(message): boolean {
+    return message.content.split(" ")[0] === env.PREFIX + this.command;
+  },
+  async execute(message): Promise<void> {
     const lastFMUsername: string = message.content.split(" ").slice(1).join();
 
     if (lastFMUsername === "") {
@@ -151,4 +152,4 @@ export const setNPUser: Command = {
       `Je nieuwe username is ${lastFMUsername}, geniet er maar van`,
     );
   },
-};
+});

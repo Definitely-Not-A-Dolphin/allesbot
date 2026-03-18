@@ -1,12 +1,12 @@
-import { type ClientEvents, Events, type Message } from "discord.js";
+import type { ClientEvents, Message } from "discord.js";
 
 export class Command {
   name: string;
   command: string | RegExp;
   description: string;
   showInHelp: boolean;
-  match: (message: Message) => boolean;
-  execute: (message: Message) => MaybePromiseVoid;
+  match: (message: Message<true>) => boolean;
+  execute: (message: Message<true>) => MaybePromiseVoid;
 
   constructor(obj: Command) {
     this.name = obj.name;
@@ -29,10 +29,5 @@ export class BotEvent<T extends keyof ClientEvents> {
     this.execute = obj.execute;
   }
 }
-
-export const botEventGuard = (object: object) =>
-  "type" in object &&
-  "execute" in object &&
-  Object.values(Events).includes(object.type as Events);
 
 export type MaybePromiseVoid = void | Promise<void>;

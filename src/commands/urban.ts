@@ -1,6 +1,6 @@
 import env from "$src/env.ts";
 import { Command } from "$src/types.ts";
-import { EmbedBuilder, type Message } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 
 export type UrbanDictionaryEntry = {
   author: string;
@@ -24,14 +24,14 @@ export const urban = new Command({
   command: /^.(ud|urban) (\d )?(\w+)$/,
   description: "Get the definition of a word from Urban Dictionary",
   showInHelp: true,
-  match(message: Message): boolean {
+  match(message): boolean {
     return (
-      Boolean(message.content.match(urban.command)) &&
+      Boolean(message.content.match(this.command)) &&
       message.content[0] === env.PREFIX
     );
   },
-  execute: async (message: Message) => {
-    const word = message.content.split(" ")[1];
+  async execute(message): Promise<void> {
+    const word = message.content.split(" ").slice(1).join();
 
     if (!word) {
       await message.reply("geef dan ook een woord jij vage kennis");
@@ -54,7 +54,7 @@ export const urban = new Command({
       return;
     }
 
-    const embeddedData: UrbanDictionaryEntry = responseData.list[0];
+    const embeddedData = responseData.list[0];
 
     const udEmbed = new EmbedBuilder()
       .setTitle(embeddedData.word)

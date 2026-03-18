@@ -1,20 +1,20 @@
 import { client } from "$src/client.ts";
 import env from "$src/env.ts";
 import { Command } from "$src/types.ts";
-import type { Message } from "discord.js";
+import { unwrap } from "$src/utils.ts";
 
 export const sed = new Command({
   name: "sed",
   command: /^.s`?\/`?((?:\\.|[^\/])*)\/((?:\\.|[^\/])*?)(\/(.*?))?$/,
   description: "Use sed to replace text in the replied to message",
   showInHelp: true,
-  match(message: Message): boolean {
+  match(message): boolean {
     return (
-      Boolean(message.content.match(sed.command)) &&
+      Boolean(message.content.match(this.command)) &&
       message.content[0] === env.PREFIX
     );
   },
-  execute: async (message: Message) => {
+  async execute(message): Promise<void> {
     if (!(message.reference && message.reference.messageId)) {
       await message.reply(
         "je moet een message replyen om dit te kunnen doen gekkie",
@@ -22,23 +22,20 @@ export const sed = new Command({
       return;
     }
 
-    const match = message.content.match(sed.command);
-
-    if (!match) return;
-    // Will never be the case but typescript will act quirky if I dont include it
+    const match = unwrap(message.content.match(this.command));
 
     const [, find, replace, , options] = match;
     if (!(find && replace)) return;
 
     if (options) {
-      if (options.match(/[^gmi]/)) {
-        await message.reply("Duplicate regex options");
+      if (!options.match(/^[gmi]$/)) {
+        await message.reply("Invalid regex options");
         return;
       }
 
       const splitted = options.split("");
       if (new Set(splitted).size !== splitted.length) {
-        await message.reply("Invalid regex options");
+        await message.reply("Duplicate regex options");
         return;
       }
     }

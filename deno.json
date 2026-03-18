@@ -22,12 +22,11 @@
       "include": [
         "camelCase",
         "eqeqeq",
+        "explicit-function-return-type",
         "no-const-reassign",
         "no-eval"
       ],
-      "exclude": [
-        "no-extra-non-null-assertion"
-      ]
+      "exclude": ["no-extra-non-null-assertion"]
     }
   }
 }

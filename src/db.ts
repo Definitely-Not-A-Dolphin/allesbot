@@ -35,4 +35,4 @@ db.sql`
   );
 `;
 
-export { db };
+export default db;

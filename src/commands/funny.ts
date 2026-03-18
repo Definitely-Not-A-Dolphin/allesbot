@@ -1,14 +1,6 @@
 import { Command } from "$src/types.ts";
-import type { Message } from "discord.js";
-import { client } from "../client.ts";
-
-function unwrap<T>($: T | undefined | null): NonNullable<T> {
-  if ($ === undefined || $ === null) {
-    throw new Error("Unwrapping failed: value is undefined or null");
-  }
-
-  return $;
-}
+import { client } from "$src/client.ts";
+import { unwrap } from "$src/utils.ts";
 
 function randomReply(match: string, artist: string): string {
   const replies = [
@@ -26,10 +18,10 @@ export const funny = new Command({
     /^(pr dan)|((alles is stuk)|(stomme bot)|(alles( )?bot is stom)|(ik haat alles( )?bot)|(waarom kan alles( )?bot (.*) niet))$/i,
   description: "grappig (geen commando)",
   showInHelp: false,
-  match(message: Message): boolean {
-    return Boolean(message.content.match(funny.command));
+  match(message): boolean {
+    return Boolean(message.content.match(this.command));
   },
-  execute: async (message: Message) => {
+  async execute(message): Promise<void> {
     if (
       message.content === "pr dan" &&
       message.reference &&
@@ -53,16 +45,15 @@ export const antiScheld = new Command({
   command: /kanker/i,
   description: "niet schelden met kanker :(",
   showInHelp: false,
-  match(message: Message): boolean {
+  match(message): boolean {
     return (
-      Boolean(message.content.match(antiScheld.command)) &&
+      Boolean(message.content.match(this.command)) &&
       message.author.id !== client.user.id
     );
   },
-  execute: async (message: Message) => {
+  async execute(message): Promise<void> {
     // nie schelde met kanker
     await message.member?.timeout(10000);
-
     await message.reply("nie schelden met kanker :(");
   },
 });
@@ -72,14 +63,14 @@ export const liedje1 = new Command({
   command: /(my favorite game)|(erase and rewind)/i,
   description: "grappig (geen commando)",
   showInHelp: false,
-  match(message: Message): boolean {
+  match(message): boolean {
     return (
-      Boolean(message.content.match(liedje1.command)) &&
+      Boolean(message.content.match(this.command)) &&
       message.author.id !== client.user.id
     );
   },
-  execute: async (message: Message) => {
-    const match = unwrap(message.content.match(liedje1.command))[0];
+  async execute(message): Promise<void> {
+    const match = unwrap(message.content.match(this.command))[0];
     await message.reply(randomReply(match, "The Cardigans"));
   },
 });
@@ -89,14 +80,14 @@ export const liedje2 = new Command({
   command: /(the pretender)/i,
   description: "grappig (geen commando)",
   showInHelp: false,
-  match(message: Message): boolean {
+  match(message): boolean {
     return (
-      Boolean(message.content.match(liedje2.command)) &&
+      Boolean(message.content.match(this.command)) &&
       message.author.id !== client.user.id
     );
   },
-  execute: async (message: Message) => {
-    const match = unwrap(message.content.match(liedje2.command))[0];
+  async execute(message): Promise<void> {
+    const match = unwrap(message.content.match(this.command))[0];
     await message.reply(randomReply(match, "Foo fighters"));
   },
 });
@@ -107,14 +98,14 @@ export const liedje3 = new Command({
     /(lonely boy)|(tighten up)|(gold on the ceiling)|(little black submarines)|(fever)|(weight of love)/i,
   description: "grappig (geen commando)",
   showInHelp: false,
-  match(message: Message): boolean {
+  match(message): boolean {
     return (
-      Boolean(message.content.match(liedje3.command)) &&
+      Boolean(message.content.match(this.command)) &&
       message.author.id !== client.user.id
     );
   },
-  execute: async (message: Message) => {
-    const match = unwrap(message.content.match(liedje3.command))[0];
+  async execute(message): Promise<void> {
+    const match = unwrap(message.content.match(this.command))[0];
     await message.reply(randomReply(match, "The Black Keys"));
   },
 });

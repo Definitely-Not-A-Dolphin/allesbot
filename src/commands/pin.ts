@@ -1,17 +1,16 @@
 import env from "$src/env.ts";
 import { Command } from "$src/types.ts";
-import type { Message } from "discord.js";
 
 export const pin = new Command({
   name: "pin",
   command: "pin",
   description: "Pin een bericht",
   showInHelp: true,
-  match(message: Message): boolean {
-    return message.content === env.PREFIX + pin.command;
+  match(message): boolean {
+    return message.content === env.PREFIX + this.command;
   },
-  execute: async (message: Message) => {
-    if (message.reference === null || message.reference.messageId === null) {
+  async execute(message): Promise<void> {
+    if (!message.reference) {
       await message.reply("omg gebruik dit op een bericht ofz");
       return;
     }
@@ -45,11 +44,11 @@ export const unpin = new Command({
   command: "unpin",
   description: "Unpin een bericht",
   showInHelp: true,
-  match(message: Message): boolean {
-    return message.content === unpin.command;
+  match(message): boolean {
+    return message.content === this.command;
   },
-  execute: async (message: Message) => {
-    if (message.reference === null || message.reference.messageId === null) {
+  async execute(message): Promise<void> {
+    if (!message.reference) {
       await message.reply("omg gebruik dit op een bericht ofz");
       return;
     }

@@ -1,7 +1,6 @@
-import { db } from "$src/db.ts";
+import db from "$src/db.ts";
 import env from "$src/env.ts";
 import { Command } from "$src/types.ts";
-import type { Message } from "discord.js";
 
 const specialKarmaValues: [RegExp, number][] = [
   [/(alles( )?bot)|(<@1269730382765621288>)/, 9999999],
@@ -33,10 +32,10 @@ export const getKarmaCommand = new Command({
   command: "karma",
   description: "Get karma of something",
   showInHelp: true,
-  match(message: Message): boolean {
-    return message.content === env.PREFIX + getKarmaCommand.command;
+  match(message): boolean {
+    return message.content === env.PREFIX + this.command;
   },
-  execute: async (message: Message) => {
+  async execute(message): Promise<void> {
     const subject = message.content.split(" ").slice(1).join();
     await message.reply(`${subject} has **${getKarma(subject)} karma**`);
   },
@@ -50,7 +49,7 @@ export const setKarmaCommand = new Command({
   match(message): boolean {
     return message.content.endsWith("--") || message.content.endsWith("++");
   },
-  execute: async (message: Message) => {
+  async execute(message): Promise<void> {
     const subject = message.content
       .substring(0, message.content.length - 2)
       .trim();

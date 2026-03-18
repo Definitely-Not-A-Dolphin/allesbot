@@ -9,7 +9,7 @@ const commands: Command[] = [
     description: "Lists all available commands",
     showInHelp: true,
     match: (message: Message) => message.content === `${env.PREFIX}help`,
-    execute: async (message: Message) => {
+    async execute(message: Message): Promise<void> {
       let returnMessage = "";
       for (const command of commands) {
         if (command.showInHelp) {

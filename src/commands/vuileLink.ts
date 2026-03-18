@@ -1,6 +1,5 @@
 import { client } from "$src/client.ts";
 import { Command } from "$src/types.ts";
-import type { Message } from "discord.js";
 // thank you for the list, https://stackoverflow.com/questions/76372936/what-is-the-most-efficient-way-to-remove-tracking-marketing-etc-query-parameter
 import badKeys from "$static/badKeys.json" with { type: "json" };
 
@@ -10,13 +9,13 @@ export const vuileLink = new Command({
     /(https?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/="'!]*)/,
   description: "maakt links schoon (geen commando)",
   showInHelp: false,
-  match(message: Message): boolean {
+  match(message): boolean {
     return (
-      Boolean(message.content.match(vuileLink.command)) &&
+      Boolean(message.content.match(this.command)) &&
       message.author.id !== client.user.id
     );
   },
-  execute: async (message: Message) => {
+  async execute(message): Promise<void> {
     const urlInMessage = message.content.match(
       /(https?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/i,
     )?.[0];
@@ -38,7 +37,7 @@ export const vuileLink = new Command({
 
     const cleanURL = parsedUrl.toString();
     await message.reply(
-      `jij bent VIES en je stomme linkje ook! Hier is een schone versie: ${cleanURL}`,
+      `jij bent VIES en je stomme linkje ook! Hier is een schone versie: <${cleanURL}>`,
     );
   },
 });
