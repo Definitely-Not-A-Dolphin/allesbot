@@ -28,7 +28,7 @@ export const vuileLink = new Command({
 
     for (const urlInMessage of urlsInMessage) {
       const parsedUrl = URL.parse(urlInMessage);
-      if (!parsedUrl) return;
+      if (!parsedUrl) continue;
 
       // we can't delete because the for loop internally keeps an index which will shift we we delete
       const toDelete: string[] = [];
@@ -36,7 +36,7 @@ export const vuileLink = new Command({
         if (badKeys.includes(key)) toDelete.push(key);
       }
 
-      if (toDelete.length === 0) return;
+      if (toDelete.length === 0) continue;
 
       for (const badKey of toDelete) parsedUrl.searchParams.delete(badKey);
 
@@ -50,8 +50,9 @@ export const vuileLink = new Command({
     } else {
       replyMessage += "s ook! Hier zijn de schone versies: ";
       for (const schoneLink of schoneLinkjes) {
-        replyMessage += `<${schoneLink}>` + " ";
+        replyMessage += `<${schoneLink}>, `;
       }
+      replyMessage = replyMessage.slice(0, -2);
     }
 
     await message.reply(replyMessage);
