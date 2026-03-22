@@ -16,28 +16,44 @@ export const vuileLink = new Command({
     );
   },
   async execute(message): Promise<void> {
-    const urlInMessage = message.content.match(
-      /(https?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/i,
-    )?.[0];
+    const urlsInMessage = message.content.match(
+      /(https?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/gi,
+    );
 
-    if (!urlInMessage) return;
+    console.log(urlsInMessage);
 
-    const parsedUrl = URL.parse(urlInMessage);
-    if (!parsedUrl) return;
+    if (!urlsInMessage) return;
 
-    // we can't delete because the for loop internally keeps an index which will shift we we delete
-    const toDelete: string[] = [];
-    for (const key of parsedUrl.searchParams.keys()) {
-      if (badKeys.includes(key)) toDelete.push(key);
+    const schoneLinkjes: string[] = [];
+
+    for (const urlInMessage of urlsInMessage) {
+      const parsedUrl = URL.parse(urlInMessage);
+      if (!parsedUrl) return;
+
+      // we can't delete because the for loop internally keeps an index which will shift we we delete
+      const toDelete: string[] = [];
+      for (const key of parsedUrl.searchParams.keys()) {
+        if (badKeys.includes(key)) toDelete.push(key);
+      }
+
+      if (toDelete.length === 0) return;
+
+      for (const badKey of toDelete) parsedUrl.searchParams.delete(badKey);
+
+      schoneLinkjes.push(parsedUrl.toString());
     }
 
-    if (toDelete.length === 0) return;
+    let replyMessage = "jij bent VIES en je stomme linkje";
 
-    for (const badKey of toDelete) parsedUrl.searchParams.delete(badKey);
+    if (schoneLinkjes.length === 1) {
+      replyMessage += ` ook! Hier is een schone versie: <${schoneLinkjes[0]}>`;
+    } else {
+      replyMessage += "s ook! Hier zijn de schone versies: ";
+      for (const schoneLink of schoneLinkjes) {
+        replyMessage += `<${schoneLink}>` + " ";
+      }
+    }
 
-    const cleanURL = parsedUrl.toString();
-    await message.reply(
-      `jij bent VIES en je stomme linkje ook! Hier is een schone versie: <${cleanURL}>`,
-    );
+    await message.reply(replyMessage);
   },
 });
