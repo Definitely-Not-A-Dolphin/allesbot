@@ -72,9 +72,11 @@ export const fipo = new Command({
 
       // the array is still needed though, to not start a lot of timeouts
 
-      const alreadyDone = db.sql`SELECT * FROM fipos WHERE date = ${getAsStringDateWithCorrectTimezoneForReal(
-        new Date(fipo.createdTimestamp),
-      )}`;
+      const alreadyDone = db.sql`SELECT * FROM fipos WHERE date = ${
+        getAsStringDateWithCorrectTimezoneForReal(
+          new Date(fipo.createdTimestamp),
+        )
+      }`;
 
       if (alreadyDone) {
         console.log({ fipoAlreadyDone: alreadyDone });
@@ -83,9 +85,11 @@ export const fipo = new Command({
 
       await message.channel.send("W00t " + fipo.author.toString() + "!");
 
-      db.sql`INSERT INTO fipos (discord_id, date) VALUES (${fipo.author.id}, ${getAsStringDateWithCorrectTimezoneForReal(
-        new Date(fipo.createdTimestamp),
-      )})`;
+      db.sql`INSERT INTO fipos (discord_id, date) VALUES (${fipo.author.id}, ${
+        getAsStringDateWithCorrectTimezoneForReal(
+          new Date(fipo.createdTimestamp),
+        )
+      })`;
     }, 1000);
   },
 });
@@ -125,9 +129,11 @@ export const fipoStats = new Command({
 
     let returnMessage = "# fipostats\n```\n";
     for (const [displayName, fipos] of fipoStats) {
-      returnMessage += `${displayName}${" ".repeat(
-        longestUsername + 4 - displayName.length,
-      )}: ${fipos}\n`;
+      returnMessage += `${displayName}${
+        " ".repeat(
+          longestUsername + 4 - displayName.length,
+        )
+      }: ${fipos}\n`;
     }
 
     await message.reply(returnMessage + "```");

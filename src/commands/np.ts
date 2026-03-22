@@ -64,7 +64,9 @@ export const np = new Command({
     // Check of er een arg is
     if (!lastFMUsername) {
       lastFMUsername =
-        db.sql`SELECT lastfm_username FROM users WHERE discord_id = ${message.author.id}`[0]
+        db.sql`SELECT lastfm_username FROM users WHERE discord_id = ${message.author.id}`[
+          0
+        ]
           .lastfm_username;
 
       // als thing undefined is, is er geen username in de db
@@ -73,13 +75,17 @@ export const np = new Command({
         return;
       }
     } else if (
-      !db.sql`SELECT discord_id FROM users WHERE lastfm_username = ${lastFMUsername}`[0]
+      !db
+        .sql`SELECT discord_id FROM users WHERE lastfm_username = ${lastFMUsername}`[
+          0
+        ]
     ) {
       await message.reply("die username heb ik niet, maat");
       return;
     }
 
-    const baseUrl = `http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${lastFMUsername}&api_key=${env.LASTFM_API_KEY}&format=json`;
+    const baseUrl =
+      `http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${lastFMUsername}&api_key=${env.LASTFM_API_KEY}&format=json`;
     const response = await fetch(baseUrl);
 
     if (!response.ok) {
@@ -103,8 +109,8 @@ export const np = new Command({
       url: recentlyPlayed[0].url,
     };
 
-    const pfpURL =
-      message.author.avatarURL() ?? message.author.defaultAvatarURL;
+    const pfpURL = message.author.avatarURL() ??
+      message.author.defaultAvatarURL;
 
     const trackEmbed = new EmbedBuilder()
       .setTitle(nowPlaying.name)

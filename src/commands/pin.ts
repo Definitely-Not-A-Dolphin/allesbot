@@ -35,7 +35,7 @@ export const pin = new Command({
     }
 
     await referenced.pin();
-    await message.reply(`bericht gepind door <@${message.author.id}>`);
+    await message.reply(`bericht gepind door ${message.author.toString()}`);
   },
 });
 
@@ -73,6 +73,6 @@ export const unpin = new Command({
     }
 
     await referenced.unpin();
-    await message.reply(`bericht geunpind door <@${message.author.id}>`);
+    await message.reply(`bericht geunpind door ${message.author.toString()}>`);
   },
 });

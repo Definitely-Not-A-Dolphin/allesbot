@@ -16,7 +16,8 @@ const commands: Command[] = [
           const commandCommand =
             (typeof command.command === "string" ? env.PREFIX : "") +
             command.command;
-          returnMessage += `**${command.name}** (\`\`${commandCommand}\`\`): ${command.description}\n`;
+          returnMessage +=
+            `**${command.name}** (\`\`${commandCommand}\`\`): ${command.description}\n`;
         }
       }
 
@@ -28,7 +29,7 @@ const commands: Command[] = [
 ];
 
 const commandFiles = Deno.readDirSync("src/commands").filter((file) =>
-  file.name.match(/\.(m|c)?(j|t)s$/),
+  file.name.match(/\.(m|c)?(j|t)s$/)
 );
 
 for (const commandFile of commandFiles) {

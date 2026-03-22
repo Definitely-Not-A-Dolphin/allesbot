@@ -16,11 +16,7 @@ export const vuileLink = new Command({
     );
   },
   async execute(message): Promise<void> {
-    const urlsInMessage = message.content.match(
-      /(https?:\/\/)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/\/=]*)/gi,
-    );
-
-    console.log(urlsInMessage);
+    const urlsInMessage = message.content.match(this.command);
 
     if (!urlsInMessage) return;
 
@@ -48,11 +44,11 @@ export const vuileLink = new Command({
     if (schoneLinkjes.length === 1) {
       replyMessage += ` ook! Hier is een schone versie: <${schoneLinkjes[0]}>`;
     } else {
-      replyMessage += "s ook! Hier zijn de schone versies: ";
+      replyMessage += "s ook! Hier zijn de schone versies:";
       for (const schoneLink of schoneLinkjes) {
-        replyMessage += `<${schoneLink}>, `;
+        replyMessage += ` <${schoneLink}>,`;
       }
-      replyMessage = replyMessage.slice(0, -2);
+      replyMessage = replyMessage.slice(0, -1);
     }
 
     await message.reply(replyMessage);

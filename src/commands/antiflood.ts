@@ -38,8 +38,7 @@ export const antiflood = new Command({
 
     // time out user
     if (bucket.count > maxBucketSize) {
-      const member =
-        message.mentions.members.first() ||
+      const member = message.mentions.members.first() ||
         message.guild?.members.cache.get(message.author.id);
 
       if (!member) {
