@@ -1,16 +1,33 @@
 import { Command } from "$src/types.ts";
-import { client } from "$src/client.ts";
 import { unwrap } from "$src/utils.ts";
 
-function randomReply(match: string, artist: string): string {
-  const replies = [
-    `${match}??? is dit een ${artist} reference???`,
-    `yoooo, ${match}!!! dat is ook een liedje van ${artist}`,
-    `wow ${match} die is echt hard (van ${artist})`,
-  ];
-
-  return replies[Math.floor(Math.random() * replies.length)];
-}
+const musicEntries: { songs: RegExp; artist: string }[] = [
+  {
+    songs: /(my favorite game)|(erase and rewind)/i,
+    artist: "The Cardigans",
+  },
+  {
+    songs: /(the pretender)/i,
+    artist: "Foo Fighters",
+  },
+  {
+    songs:
+      /(lonely boy)|(tighten up)|(gold on the ceiling)|(little black submarines)|(fever)|(weight of love)/i,
+    artist: "The Black Keys",
+  },
+  {
+    songs: /(peliä)|(cha cha cha)|(punainen marli)/i,
+    artist: "Käärijä",
+  },
+  {
+    songs: /trafik/i,
+    artist: "Käärijä en Joost Klein",
+  },
+  {
+    songs: /ruoska/i,
+    artist: "Käärijä en Erika Vikman",
+  },
+] as const;
 
 export const funny = new Command({
   name: "funny",
@@ -48,7 +65,7 @@ export const antiScheld = new Command({
   match(message): boolean {
     return (
       Boolean(message.content.match(this.command)) &&
-      message.author.id !== client.user.id
+      !message.author.bot
     );
   },
   async execute(message): Promise<void> {
@@ -58,54 +75,34 @@ export const antiScheld = new Command({
   },
 });
 
-export const liedje1 = new Command({
+export const liedje = new Command({
   name: "liedje",
-  command: /(my favorite game)|(erase and rewind)/i,
+  command: /.+/,
   description: "grappig (geen commando)",
   showInHelp: false,
   match(message): boolean {
     return (
-      Boolean(message.content.match(this.command)) &&
-      message.author.id !== client.user.id
+      Boolean(
+        musicEntries.find(({ songs }) => message.content.match(songs)),
+      ) &&
+      !message.author.bot
     );
   },
   async execute(message): Promise<void> {
-    const match = unwrap(message.content.match(this.command))[0];
-    await message.reply(randomReply(match, "The Cardigans"));
-  },
-});
-
-export const liedje2 = new Command({
-  name: "liedje",
-  command: /(the pretender)/i,
-  description: "grappig (geen commando)",
-  showInHelp: false,
-  match(message): boolean {
-    return (
-      Boolean(message.content.match(this.command)) &&
-      message.author.id !== client.user.id
-    );
-  },
-  async execute(message): Promise<void> {
-    const match = unwrap(message.content.match(this.command))[0];
-    await message.reply(randomReply(match, "Foo fighters"));
-  },
-});
-
-export const liedje3 = new Command({
-  name: "liedje",
-  command:
-    /(lonely boy)|(tighten up)|(gold on the ceiling)|(little black submarines)|(fever)|(weight of love)/i,
-  description: "grappig (geen commando)",
-  showInHelp: false,
-  match(message): boolean {
-    return (
-      Boolean(message.content.match(this.command)) &&
-      message.author.id !== client.user.id
-    );
-  },
-  async execute(message): Promise<void> {
-    const match = unwrap(message.content.match(this.command))[0];
-    await message.reply(randomReply(match, "The Black Keys"));
+    try {
+      const { songs, artist } = unwrap(
+        musicEntries.find(({ songs }) => message.content.match(songs)),
+      );
+      const song = unwrap(message.content.match(songs))[0];
+      const replies = [
+        `${song}??? is dit een ${artist} reference???`,
+        `yoooo, ${song}!!! dat is ook een liedje van ${artist}`,
+        `wow ${song} die is echt hard (van ${artist})`,
+      ];
+      await message.reply(replies[Math.floor(Math.random() * replies.length)]);
+    } catch (error) {
+      await message.reply("Oke wtf ik heb hoofdpijn");
+      console.error(error);
+    }
   },
 });

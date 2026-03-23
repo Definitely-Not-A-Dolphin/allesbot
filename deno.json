@@ -13,9 +13,9 @@
 
     "@db/sqlite": "jsr:@db/sqlite@^0.12.0",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.6",
-    "discord.js": "npm:discord.js@^14.24.2",
+    "discord.js": "npm:discord.js@^14.25.1",
     "dotenv": "npm:dotenv@^17.3.1", // Only needed because of legacy dotenv parsing
-    "zod": "npm:zod@^4.1.12" // This one too
+    "zod": "npm:zod@^4.3.6" // This one too
   },
   "lint": {
     "rules": {
