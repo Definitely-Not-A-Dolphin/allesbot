@@ -1,5 +1,4 @@
 import { Command } from "$src/types.ts";
-import { unwrap } from "$src/utils.ts";
 
 const musicEntries: { songs: RegExp; artist: string }[] = [
   {
@@ -90,10 +89,10 @@ export const liedje = new Command({
   },
   async execute(message): Promise<void> {
     try {
-      const { songs, artist } = unwrap(
-        musicEntries.find(({ songs }) => message.content.match(songs)),
-      );
-      const song = unwrap(message.content.match(songs))[0];
+      const { songs, artist } = musicEntries.find(({ songs }) =>
+        message.content.match(songs)
+      )!;
+      const song = message.content.match(songs)![0];
       const replies = [
         `${song}??? is dit een ${artist} reference???`,
         `yoooo, ${song}!!! dat is ook een liedje van ${artist}`,

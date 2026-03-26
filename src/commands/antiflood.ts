@@ -1,4 +1,3 @@
-import { client } from "$src/client.ts";
 import { Command } from "$src/types.ts";
 
 export type BucketContent = {
@@ -15,19 +14,16 @@ export const antiflood = new Command({
   command: /.+/,
   description: "niet spammen",
   showInHelp: false,
-  match: (message) =>
-    message.author.id !== client.user.id && !message.author.bot,
+  match: (message) => !message.author.bot,
   async execute(message): Promise<void> {
     const now = new Date().valueOf();
-    let bucket = buckets[message.author.id];
+    const bucket = buckets[message.author.id];
 
     if (!bucket) {
-      bucket = {
+      buckets[message.author.id] = {
         lastTS: now,
         count: 1,
       };
-
-      buckets[message.author.id] = bucket;
       return;
     }
 
@@ -39,7 +35,7 @@ export const antiflood = new Command({
     // time out user
     if (bucket.count > maxBucketSize) {
       const member = message.mentions.members.first() ||
-        message.guild?.members.cache.get(message.author.id);
+        message.guild.members.cache.get(message.author.id);
 
       if (!member) {
         console.log(

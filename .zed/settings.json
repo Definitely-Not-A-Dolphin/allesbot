@@ -6,27 +6,27 @@
         "deno",
         "!typescript-language-server",
         "!vtsls",
-        "!eslint",
+        "!eslint"
       ],
-      "formatter": "language_server",
+      "formatter": "language_server"
     },
     "TypeScript": {
       "language_servers": [
         "deno",
         "!typescript-language-server",
         "!vtsls",
-        "!eslint",
+        "!eslint"
       ],
-      "formatter": "language_server",
-    },
+      "formatter": "language_server"
+    }
   },
   "lsp": {
     "deno": {
       "settings": {
         "deno": {
-          "enable": true,
-        },
-      },
-    },
-  },
+          "enable": true
+        }
+      }
+    }
+  }
 }

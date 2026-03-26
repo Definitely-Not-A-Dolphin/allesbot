@@ -21,9 +21,7 @@ export const yearprogress = new Command({
 
     await message.reply(
       `We zijn al ysu **${
-        ((currentDay / maxDay) * 100).toFixed(
-          1,
-        )
+        (currentDay / maxDay * 100).toFixed(1)
       }%** in het jaar`,
     );
   },

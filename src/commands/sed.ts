@@ -1,7 +1,6 @@
 import { client } from "$src/client.ts";
 import env from "$src/env.ts";
 import { Command } from "$src/types.ts";
-import { unwrap } from "$src/utils.ts";
 
 export const sed = new Command({
   name: "sed",
@@ -22,7 +21,7 @@ export const sed = new Command({
       return;
     }
 
-    const match = unwrap(message.content.match(this.command));
+    const match = message.content.match(this.command)!;
 
     const [, find, replace, , options] = match;
     if (!(find && replace)) return;

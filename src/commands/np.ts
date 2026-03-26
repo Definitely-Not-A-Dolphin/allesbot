@@ -97,7 +97,7 @@ export const np = new Command({
     const recentlyPlayed: LastFMTrack[] = lastFMData.recenttracks.track;
 
     if (!recentlyPlayed[0]["@attr"]?.nowplaying) {
-      await message.reply("dan moet je wel muziek aan zetten jij zukkel");
+      await message.reply("dan moet je wel muziek aan zetten jij sukkel");
       return;
     }
 
@@ -137,7 +137,7 @@ export const setNPUser = new Command({
     return message.content.split(" ")[0] === env.PREFIX + this.command;
   },
   async execute(message): Promise<void> {
-    const lastFMUsername: string = message.content.split(" ").slice(1).join();
+    const lastFMUsername = message.content.split(" ").slice(1).join();
 
     if (lastFMUsername === "") {
       await message.reply("Dan moet je ook wel een username geven slimmerik");
